@@ -1,17 +1,42 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"time"
 )
 
 var correct int
 var incorrect int
 
 func main() {
+
+	timer := time.NewTimer(30 * time.Second)
+
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("Quiz Time! Ready?! [y/n]: ")
+
+	for scanner.Scan() {
+		if scanner.Text() != "y" {
+			fmt.Printf("%T\n", "y")
+			os.Exit(3)
+		} else {
+			break
+		}
+	}
+
+	go func() {
+		fmt.Println("Timer started!")
+		<-timer.C
+		fmt.Println("Outta Time!!")
+		fmt.Println("Correct:", correct, "Incorrect:", incorrect)
+		os.Exit(0)
+
+	}()
 
 	f, err := os.Open("problems.csv")
 
