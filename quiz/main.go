@@ -21,8 +21,8 @@ func main() {
 	fmt.Print("Quiz Time! Ready?! [y/n]: ")
 
 	for scanner.Scan() {
-		if scanner.Text() != "y" {
-			fmt.Printf("%T\n", "y")
+		if scanner.Text() == "n" {
+			fmt.Println("Goodbye")
 			os.Exit(3)
 		} else {
 			break
