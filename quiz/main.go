@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -15,10 +16,12 @@ var incorrect int
 
 func main() {
 
-	timer := time.NewTimer(30 * time.Second)
+	var nFlag = flag.Int("n", 30, "seconds for timer")
+	flag.Parse()
+	timer := time.NewTimer(time.Duration(*nFlag) * time.Second)
 
-	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Quiz Time! Ready?! [y/n]: ")
+	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
 		if scanner.Text() == "n" {
