@@ -11,11 +11,12 @@ import (
 	"time"
 )
 
+// Scores to return
 var correct int
 var incorrect int
 
 func main() {
-
+	// Timer flag, defaults to 30 seconds
 	var nFlag = flag.Int("n", 30, "seconds for timer")
 	flag.Parse()
 	timer := time.NewTimer(time.Duration(*nFlag) * time.Second)
@@ -23,6 +24,7 @@ func main() {
 	fmt.Print("Quiz Time! Ready?! [y/n]: ")
 	scanner := bufio.NewScanner(os.Stdin)
 
+	// Read stdin, Exits when n is passed, break loop otherwise
 	for scanner.Scan() {
 		if scanner.Text() == "n" {
 			fmt.Println("Goodbye")
@@ -31,7 +33,7 @@ func main() {
 			break
 		}
 	}
-
+	// Timer starts in seperate goroutine. Running <-timer.C w/o caused various problems.
 	go func() {
 		fmt.Println("Timer started!")
 		<-timer.C
@@ -46,11 +48,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	/*
+	 Because there is no modification to the file and is only used for reading/scoring anweres, The file is
+	 is not loaded into memory, as we only need to keep score.
+	*/
 	defer f.Close()
 
 	csvReader := csv.NewReader(f)
-
+	// for loop through questions.
 	for {
 		rec, err := csvReader.Read()
 		if err == io.EOF {
@@ -61,7 +66,7 @@ func main() {
 		}
 
 		fmt.Printf("What is %v?\n", rec[0])
-
+		// Replace previous input with new at same address
 		var input string
 		fmt.Scanln(&input)
 
